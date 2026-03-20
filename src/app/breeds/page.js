@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Header from '@/components/Header/Header';
 import ExplorerNav from '@/components/ExplorerNav/ExplorerNav';
 import BreedCard from '@/components/BreedCard/BreedCard';
 import Pagination from '@/components/Pagination/Pagination';
-import Loading from '@/components/Loading/Loading';
 import { useLanguage } from '@/context/LanguageContext';
 import { getFlagFromCode } from '@/lib/originFlags';
+import { filterBreeds, getBreeds, getOriginOptions } from '@/lib/catalog';
 import styles from './page.module.css';
 
 function getInitialState() {
@@ -28,41 +28,24 @@ function getInitialState() {
 export default function BreedsPage() {
   const initialState = getInitialState();
   const { lang, t } = useLanguage();
-  const [breeds, setBreeds] = useState([]);
-  const [total, setTotal] = useState(0);
-  const [origins, setOrigins] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(initialState.page);
   const [searchQuery, setSearchQuery] = useState(initialState.searchQuery);
   const [originFilter, setOriginFilter] = useState(initialState.originFilter);
   const limit = 9;
 
+  const allBreeds = useMemo(() => getBreeds(lang), [lang]);
+  const origins = useMemo(() => getOriginOptions(lang), [lang]);
+  const filteredBreeds = useMemo(
+    () => filterBreeds({ breeds: allBreeds, query: searchQuery, originCode: originFilter }),
+    [allBreeds, originFilter, searchQuery]
+  );
+  const total = filteredBreeds.length;
+  const breeds = useMemo(() => {
+    const start = page * limit;
+    return filteredBreeds.slice(start, start + limit);
+  }, [filteredBreeds, page]);
+
   useEffect(() => {
-    const fetchBreeds = async () => {
-      setLoading(true);
-      try {
-        const params = new URLSearchParams({
-          limit: String(limit),
-          page: String(page),
-          lang,
-        });
-        if (searchQuery) params.set('query', searchQuery);
-        if (originFilter) params.set('origin', originFilter);
-
-        const res = await fetch(`/api/breeds?${params.toString()}`);
-        const data = await res.json();
-        setBreeds(data.items || []);
-        setTotal(data.total || 0);
-        setOrigins(data.origins || []);
-      } catch (error) {
-        console.error('Failed to fetch breeds:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBreeds();
-
     const url = new URL(window.location.href);
     url.searchParams.set('page', String(page));
     if (searchQuery) {
@@ -76,7 +59,14 @@ export default function BreedsPage() {
       url.searchParams.delete('origin');
     }
     window.history.replaceState({}, '', url.toString());
-  }, [lang, originFilter, page, searchQuery]);
+  }, [originFilter, page, searchQuery]);
+
+  useEffect(() => {
+    const maxPage = Math.max(0, Math.ceil(total / limit) - 1);
+    if (page > maxPage) {
+      setPage(maxPage);
+    }
+  }, [page, total]);
 
   const totalPages = Math.ceil(total / limit);
   const activeQueryString = new URLSearchParams(
@@ -153,9 +143,7 @@ export default function BreedsPage() {
             </div>
 
             <div className={styles.grid}>
-              {loading ? (
-                <Loading />
-              ) : breeds.length === 0 ? (
+              {breeds.length === 0 ? (
                 <div className={styles.emptyState}>{t('noBreedsFound')}</div>
               ) : (
                 breeds.map((breed) => (

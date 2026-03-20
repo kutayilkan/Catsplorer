@@ -1,28 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styles from './FactSwitcher.module.css';
 import { useLanguage } from '@/context/LanguageContext';
+import { getFacts } from '@/lib/catalog';
 
 export default function FactSwitcher({ inline = false }) {
   const { lang, t } = useLanguage();
-  const [facts, setFacts] = useState([]);
+  const facts = useMemo(() => getFacts(lang), [lang]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [loadingFacts, setLoadingFacts] = useState(true);
 
   useEffect(() => {
-    const fetchFacts = async () => {
-      setLoadingFacts(true);
-      try {
-        const res = await fetch(`/api/facts?lang=${lang}`);
-        const data = await res.json();
-        setFacts(data);
-      } catch (error) {
-        console.error("Failed to fetch facts:", error);
-      }
-      setLoadingFacts(false);
-    };
-    fetchFacts();
+    setCurrentIndex(0);
   }, [lang]);
 
   const nextFact = () => {
@@ -35,9 +24,6 @@ export default function FactSwitcher({ inline = false }) {
     setCurrentIndex((prev) => (prev - 1 + facts.length) % facts.length);
   };
 
-  if (loadingFacts && facts.length === 0) {
-    return <div className={`${styles.loadingCard} ${inline ? styles.inlineCard : ''}`}>{t('loading')}...</div>;
-  }
   if (facts.length === 0) return null;
 
   return (
