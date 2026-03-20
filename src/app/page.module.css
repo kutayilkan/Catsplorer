@@ -1,0 +1,133 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at top right, #FFF5F0, #FAFAFA, #FDF2F8);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.backgroundPatterns {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.floatingPaw {
+  position: absolute;
+  font-size: 2.5rem;
+  opacity: 0.08;
+  color: var(--primary);
+  animation: floatPaw 6s ease-in-out infinite;
+}
+
+.heroSection {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.main {
+  text-align: center;
+  max-width: 600px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  padding: 3rem;
+  border-radius: 40px;
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.04),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10;
+}
+
+.heroImage {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.mascot {
+  filter: drop-shadow(0 15px 30px rgba(249, 115, 22, 0.25));
+  animation: floatMascot 4s ease-in-out infinite;
+}
+
+.title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, var(--primary), #FFB703);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.1;
+}
+
+.description {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  margin-bottom: 2.5rem;
+}
+
+.ctaContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.primaryBtn {
+  background: var(--primary);
+  color: white;
+  padding: 1.25rem 3rem;
+  border-radius: 100px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  box-shadow: 0 15px 30px rgba(249, 115, 22, 0.35);
+  transition: var(--transition);
+  border: 2px solid transparent;
+}
+
+.primaryBtn:hover {
+  transform: translateY(-5px) scale(1.02);
+  background: var(--primary-hover);
+  box-shadow: 0 20px 40px rgba(249, 115, 22, 0.45);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatMascot {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(2deg); }
+}
+
+@keyframes floatPaw {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(10px, -15px) rotate(5deg); }
+  66% { transform: translate(-5px, -25px) rotate(-5deg); }
+}
+
+@media (max-width: 640px) {
+  .heroSection {
+    padding-inline: 1rem;
+  }
+
+  .main {
+    padding: 2rem;
+  }
+
+  .title {
+    font-size: 2.75rem;
+  }
+}

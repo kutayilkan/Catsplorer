@@ -1,0 +1,165 @@
+.factCard {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  padding: 2.5rem;
+  border-radius: 40px;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+  border: none;
+  position: sticky;
+  top: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.inlineCard {
+  position: static;
+  top: auto;
+  min-height: 100%;
+}
+
+.factCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.12);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sparkle {
+  font-size: 1.5rem;
+  animation: shine 2s infinite ease-in-out;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+  margin: 0;
+  background: linear-gradient(135deg, var(--primary), #FFB703);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.content {
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.factText {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin: 0;
+  font-weight: 500;
+  font-family: inherit;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.controlBtn {
+  background: white;
+  border: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--foreground);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.controlBtn:hover {
+  background: var(--primary);
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 10px 20px rgba(249, 115, 22, 0.25);
+}
+
+.arrow {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.counterWrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.current {
+  font-size: 1.25rem;
+  color: var(--primary);
+  font-feature-settings: "tnum";
+}
+
+.divider {
+  opacity: 0.3;
+}
+
+.total {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.loadingCard {
+  height: 300px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+@keyframes shine {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 1024px) {
+  .factCard {
+    position: static;
+    margin-top: 2rem;
+  }
+
+  .inlineCard {
+    margin-top: 0;
+  }
+}
